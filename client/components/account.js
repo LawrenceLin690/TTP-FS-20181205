@@ -10,7 +10,6 @@ class Account extends Component {
     super(props);
     this.state = {
       portfolio: {},
-      add: 'e',
     };
     this.getMarketInfo = this.getMarketInfo.bind(this);
     this.getAccountValue = this.getAccountValue.bind(this);
@@ -21,7 +20,10 @@ class Account extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.holdings.length !== prevProps.holdings.length) {
+    if (
+      this.props.holdings.length !== prevProps.holdings.length ||
+      this.props.holdings[0].totalAmount !== prevProps.holdings[0].totalAmount
+    ) {
       this.props.userHoldings(this.props.userId);
       let searchString = this.props.holdings
         .map(stock => stock.ticker.toLowerCase())
@@ -58,7 +60,15 @@ class Account extends Component {
           <div id="left">
             <div style={{ color: 'burlywood', fontWeight: 'bold' }}>
               Portfolio and Total Account Value : $
-              {sum ? sum.toLocaleString() : 0}
+              {sum
+                ? sum.toLocaleString(
+                    ('en',
+                    {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })
+                  )
+                : 0}
             </div>
 
             <br />
@@ -104,7 +114,13 @@ class Account extends Component {
                           {(
                             this.state.portfolio[stock.ticker].quote
                               .latestPrice * stock.totalAmount
-                          ).toLocaleString()}
+                          ).toLocaleString(
+                            ('en',
+                            {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })
+                          )}
                         </div>
                       </React.Fragment>
                     ) : (
