@@ -20,16 +20,28 @@ class Account extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      this.props.holdings.length !== prevProps.holdings.length ||
-      this.props.holdings[0].totalAmount !== prevProps.holdings[0].totalAmount
-    ) {
-      this.props.userHoldings(this.props.userId);
-      let searchString = this.props.holdings
-        .map(stock => stock.ticker.toLowerCase())
-        .join();
-      if (searchString) {
-        this.getMarketInfo(searchString);
+    if (this.props.holdings[0]) {
+      if (
+        this.props.holdings.length !== prevProps.holdings.length ||
+        this.props.holdings[0].totalAmount !== prevProps.holdings[0].totalAmount
+      ) {
+        this.props.userHoldings(this.props.userId);
+        let searchString = this.props.holdings
+          .map(stock => stock.ticker.toLowerCase())
+          .join();
+        if (searchString) {
+          this.getMarketInfo(searchString);
+        }
+      }
+    } else {
+      if (this.props.holdings.length !== prevProps.holdings.length) {
+        this.props.userHoldings(this.props.userId);
+        let searchString = this.props.holdings
+          .map(stock => stock.ticker.toLowerCase())
+          .join();
+        if (searchString) {
+          this.getMarketInfo(searchString);
+        }
       }
     }
   }
